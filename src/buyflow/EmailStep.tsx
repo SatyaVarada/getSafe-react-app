@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { EMAIL } from '../utilities/constants'
 
 interface EmailStepProps {
   cb: (field: string, value: string) => void
@@ -6,6 +7,16 @@ interface EmailStepProps {
 
 const EmailStep: React.FC<EmailStepProps> = (props) => {
   const [email, setEmail] = useState('')
+
+  const OnSubmitOfEmail: () => void = () => {
+    let re = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/
+    if (re.test(email)) {
+      props.cb(EMAIL, email)
+    } else {
+      alert('Enter a valid email')
+    }
+  }
+
   return (
     <>
       <div>
@@ -18,7 +29,7 @@ const EmailStep: React.FC<EmailStepProps> = (props) => {
           value={email}
         ></input>
       </div>
-      <button onClick={() => props.cb('email', email)}>Next</button>
+      <button onClick={OnSubmitOfEmail}>Next</button>
     </>
   )
 }
