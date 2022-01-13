@@ -1,18 +1,21 @@
 import React, { useState } from 'react'
-import { AGE } from '../utilities/constants'
+import { AGE, ERROR_MESSAGE_AGE } from '../utilities/constants'
+import { displayErrorMessage } from '../utilities/utils'
 
 interface AgeStepProps {
-  cb: (field: string, value: number) => void
+  callBack: (field: string, value: number) => void
 }
 
 const AgeStep: React.FC<AgeStepProps> = (props) => {
   const [age, setAge] = useState(0)
+  const [errorMessage, setErrorMessage] = useState('')
 
   const OnSubmitOfAge: () => void = () => {
     if (age > 0 && age <= 150) {
-      props.cb(AGE, age)
+      setErrorMessage('')
+      props.callBack(AGE, age)
     } else {
-      alert('Enter a valid age between 1 and 150')
+      setErrorMessage(ERROR_MESSAGE_AGE)
     }
   }
 
@@ -27,9 +30,9 @@ const AgeStep: React.FC<AgeStepProps> = (props) => {
           onChange={({ target: { value } }) => {
             setAge(Number(value))
           }}
-          value={age}
         ></input>
       </div>
+      {displayErrorMessage(errorMessage)}
       <button onClick={OnSubmitOfAge}>Next</button>
     </>
   )

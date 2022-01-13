@@ -1,5 +1,14 @@
 import React, { useState } from 'react'
-import { EMAIL, AGE, NAME, SUMMARY } from '../utilities/constants'
+import { ProductIds } from '../utilities/enums'
+import {
+  EMAIL,
+  AGE,
+  NAME,
+  SUMMARY,
+  PRODUCT_IDS_TO_NAMES,
+  PRODUCT_FLOW,
+  BUY_DESCRIPTION,
+} from '../utilities/constants'
 import AgeStep from './AgeStep'
 import EmailStep from './EmailStep'
 import NameStep from './NameStep'
@@ -9,52 +18,41 @@ interface BuyflowProps {
   productId: ProductIds
 }
 
-export enum ProductIds {
-  devIns = 'dev_ins',
-  designIns = 'design_ins',
-}
-
-const PRODUCT_IDS_TO_NAMES = {
-  [ProductIds.devIns]: 'Developer Insurance',
-  [ProductIds.designIns]: 'Designer Insurance',
-}
-
-// const PRODUCT_FLOW = {
-//   [ProductIds.devIns]: [EMAIL, AGE, SUMMARY],
-//   [ProductIds.designIns]: [EMAIL, AGE, NAME, SUMMARY]
-// };
-
 const Buyflow: React.FC<BuyflowProps> = (props) => {
-  const [currentStep, setStep] = useState('email')
+  const [currentStep, setStep] = useState(0)
   const [collectedData, updateData] = useState({
     email: '',
     age: 0,
     name: '',
   })
-  const getStepCallback = (nextStep: string) => (field: string, value: any) => {
+
+  const getStepCallback = (field: string, value: any) => {
     updateData({ ...collectedData, [field]: value })
-    setStep(nextStep)
+    setStep(currentStep + 1)
   }
-  return (
-    <>
-      <h4>Buying {PRODUCT_IDS_TO_NAMES[props.productId]}</h4>
-      {(currentStep === EMAIL && <EmailStep cb={getStepCallback(AGE)} />) ||
-        (currentStep === AGE && (
-          <AgeStep
-            cb={
-              props.productId === 'dev_ins'
-                ? getStepCallback(SUMMARY)
-                : getStepCallback(NAME)
-            }
-          />
-        )) ||
-        (currentStep === NAME && <NameStep cb={getStepCallback(SUMMARY)} />) ||
-        (currentStep === SUMMARY && (
+
+  const displayStep = () => {
+    switch (PRODUCT_FLOW[props.productId][currentStep]) {
+      case AGE:
+        return <AgeStep callBack={getStepCallback} />
+      case EMAIL:
+        return <EmailStep callBack={getStepCallback} />
+      case NAME:
+        return <NameStep callBack={getStepCallback} />
+      case SUMMARY:
+        return (
           <SummaryStep
             productId={props.productId}
             collectedData={collectedData}
           />
-        ))}
+        )
+    }
+  }
+
+  return (
+    <>
+      <h4>{BUY_DESCRIPTION + ' ' + PRODUCT_IDS_TO_NAMES[props.productId]}</h4>
+      {displayStep()}
     </>
   )
 }

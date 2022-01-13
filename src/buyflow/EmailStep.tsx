@@ -1,19 +1,22 @@
 import React, { useState } from 'react'
-import { EMAIL } from '../utilities/constants'
+import { EMAIL, ERROR_MESSAGE_EMAIL } from '../utilities/constants'
+import { displayErrorMessage } from '../utilities/utils'
 
 interface EmailStepProps {
-  cb: (field: string, value: string) => void
+  callBack: (field: string, value: string) => void
 }
 
 const EmailStep: React.FC<EmailStepProps> = (props) => {
   const [email, setEmail] = useState('')
+  const [errorMessage, setErrorMessage] = useState('')
 
   const OnSubmitOfEmail: () => void = () => {
-    let re = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/
-    if (re.test(email)) {
-      props.cb(EMAIL, email)
+    const regExp = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/
+    if (regExp.test(email)) {
+      setErrorMessage('')
+      props.callBack(EMAIL, email)
     } else {
-      alert('Enter a valid email')
+      setErrorMessage(ERROR_MESSAGE_EMAIL)
     }
   }
 
@@ -29,6 +32,7 @@ const EmailStep: React.FC<EmailStepProps> = (props) => {
           value={email}
         ></input>
       </div>
+      {displayErrorMessage(errorMessage)}
       <button onClick={OnSubmitOfEmail}>Next</button>
     </>
   )

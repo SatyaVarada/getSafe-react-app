@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import { ProductIds } from '../utilities/enums'
 
 interface SummaryStepProps {
   collectedData: {
@@ -15,7 +16,7 @@ const SummaryStep: React.FC<SummaryStepProps> = (props) => {
     <>
       <div>Email: {props.collectedData.email}</div>
       <div>Age: {props.collectedData.age}</div>
-      {props.productId === 'design_ins' && (
+      {props.productId === ProductIds.designIns && (
         <div>Name: {props.collectedData.name}</div>
       )}
       <div>

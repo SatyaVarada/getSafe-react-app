@@ -1,18 +1,28 @@
 import React, { useState } from 'react'
+import {
+  ERROR_MESSAGE_FIRST_NAME,
+  ERROR_MESSAGE_LAST_NAME,
+  NAME,
+} from '../utilities/constants'
+import { displayErrorMessage } from '../utilities/utils'
 
 interface NameStepProps {
-  cb: (field: string, value: string) => void
+  callBack: (field: string, value: string) => void
 }
 
 const NameStep: React.FC<NameStepProps> = (props) => {
   const [fname, setFname] = useState('')
   const [lname, setLname] = useState('')
+  const [errorMessage, setErrorMessage] = useState('')
 
   const OnSubmitOfName: () => void = () => {
     if (fname.length > 0 && lname.length > 0) {
-      props.cb('name', fname + ' ' + lname)
+      setErrorMessage('')
+      props.callBack(NAME, fname + ' ' + lname)
+    } else if (fname.length === 0) {
+      setErrorMessage(ERROR_MESSAGE_FIRST_NAME)
     } else {
-      alert('Enter a both first and last names')
+      setErrorMessage(ERROR_MESSAGE_LAST_NAME)
     }
   }
 
@@ -23,20 +33,21 @@ const NameStep: React.FC<NameStepProps> = (props) => {
         <input
           type="string"
           onChange={({ target: { value } }) => {
-            setFname(String(value))
+            setFname(String(value).trim())
           }}
-          value={fname}
+          defaultValue={fname}
         ></input>
         <br />
         Last Name:{' '}
         <input
           type="string"
           onChange={({ target: { value } }) => {
-            setLname(String(value))
+            setLname(String(value).trim())
           }}
-          value={lname}
+          defaultValue={lname}
         ></input>
       </div>
+      {displayErrorMessage(errorMessage)}
       <button onClick={OnSubmitOfName}>Next</button>
     </>
   )
