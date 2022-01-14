@@ -3,7 +3,9 @@ import ReactDOM from 'react-dom'
 import './index.css'
 import App from './App'
 import reportWebVitals from './reportWebVitals'
+import { DEV } from './utilities/constants'
 
+if (process.env.NODE_ENV !== DEV) console.log = () => {}
 ReactDOM.render(
   <React.StrictMode>
     <App />

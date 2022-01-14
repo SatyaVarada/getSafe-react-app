@@ -1,8 +1,14 @@
-import React from 'react'
 import logo from './logo.svg'
 import './App.css'
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom'
-import Buyflow, { ProductIds } from './buyflow/Buyflow'
+import { ProductIds } from './utilities/enums'
+import {
+  HOME_DESCRIPTION,
+  PRODUCT_IDS_TO_NAMES,
+  WELCOME_MESSAGE,
+} from './utilities/constants'
+import Buyflow from './buyflow/Buyflow'
+import Acknowledgement from './buyflow/Acknowledgement'
 
 const App = () => {
   return (
@@ -15,9 +21,28 @@ const App = () => {
           <Route path="/buy/insurance_dev">
             <Buyflow productId={ProductIds.devIns} />
           </Route>
+          <Route path="/buy/insurance_design">
+            <Buyflow productId={ProductIds.designIns} />
+          </Route>
+          <Route path="/purchased=dev_ins">
+            <Acknowledgement productId={ProductIds.devIns} />
+          </Route>
+          <Route path="/purchased=design_ins">
+            <Acknowledgement productId={ProductIds.designIns} />
+          </Route>
           <Route path="/">
-            <p>Welcome to Getsafe's Developer Insurance</p>
-            <Link to="/buy/insurance_dev">Get started!</Link>
+            <p>
+              {WELCOME_MESSAGE}
+              <br />
+              {HOME_DESCRIPTION}
+            </p>
+            <Link to="/buy/insurance_dev">
+              {PRODUCT_IDS_TO_NAMES[ProductIds.devIns]}
+            </Link>
+            <br />
+            <Link to="/buy/insurance_design">
+              {PRODUCT_IDS_TO_NAMES[ProductIds.designIns]}
+            </Link>
           </Route>
         </Switch>
       </div>
